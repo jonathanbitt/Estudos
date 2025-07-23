@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estudo de Inglês - Palavra do Dia</title>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; padding: 20px; max-width: 800px; margin: auto; background-color: #f4f4f4; color: #333; }
+        .word-section { background-color: #fff; padding: 25px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); margin-bottom: 30px; }
+        .word { font-size: 2.5em; color: #0056b3; margin-bottom: 10px; text-align: center; }
+        .definition { font-style: italic; color: #555; font-size: 1.1em; margin-bottom: 15px; }
+        .example { margin-top: 15px; border-left: 4px solid #007bff; padding-left: 15px; background-color: #e9f7ff; border-radius: 5px; padding-top: 10px; padding-bottom: 10px; }
+        .synonyms, .antonyms { margin-top: 10px; font-size: 0.95em; color: #666; }
+        .actions { text-align: center; margin-top: 30px; }
+        .actions a { display: inline-block; margin: 0 10px; padding: 10px 20px; background-color: #28a745; color: white; text-decoration: none; border-radius: 5px; transition: background-color 0.3s ease; }
+        .actions a:hover { background-color: #218838; }
+        .error-message { color: #dc3545; text-align: center; font-size: 1.2em; margin-top: 50px; }
+        audio { width: 100%; max-width: 300px; margin-top: 15px; display: block; margin-left: auto; margin-right: auto; }
+    </style>
+</head>
+<body>
+
+    <h1>Estudo de Inglês</h1>
+
+    <div id="word-details" class="word-section">
+        <p>Carregando palavra...</p>
+    </div>
+
+    <div class="actions">
+        <a id="link-review-daily-full" href="#">Revisar Diariamente (Completo)</a>
+        <a id="link-review-3days-simplified" href="#">Revisar em 3 Dias (Simplificado)</a>
+        <a id="link-mark-mastered" href="#">Dominada (Minimalista)</a>
+
+    </div>
+
+    <script>
+        
+                        
+        const wordsData = {
+            "ability": {
+                "full": {
+                    "definition": "habilidade",
+                    "example": "1. Her ability to solve complex problems is impressive. (A habilidade dela para resolver problemas complexos é impressionante.) | 2. The athlete's physical abilities are extraordinary. (As habilidades físicas do atleta são extraordinárias.) | 3. This software has the ability to learn from user behavior. (Este software tem a capacidade de aprender com o comportamento do usuário.)",
+                    "synonyms": "skill, capability",
+                    "antonyms": "inability, incapacity"
+                },
+                "simplified": {
+                    "definition": "habilidade",
+                    "example": "Her ability to solve problems is impressive. (A habilidade dela para resolver problemas é impressionante.)"
+                },
+                "mastered": {
+                    "definition": "habilidade",
+                    "example": ""
+                }
+            },
+            "access": {
+                "full": {
+                    "definition": "acesso",
+                    "example": "1. Students have access to the library 24/7. (Os estudantes têm acesso à biblioteca 24 horas por dia.) | 2. The fire exit must have clear access at all times. (A saída de emergência deve ter acesso livre em todos os momentos.) | 3. The journalist gained access to classified documents. (O jornalista obteve acesso a documentos classificados.)",
+                    "synonyms": "entry, admission",
+                    "antonyms": "denial, exclusion"
+                },
+                "simplified": {
+                    "definition": "acesso",
+                    "example": "Students have access to the library. (Os estudantes têm acesso à biblioteca.)"
+                },
+                "mastered": {
+                    "definition": "acesso",
+                    "example": ""
+                }
+            },
+            "achievement": {
+                "full": {
+                    "definition": "conquista",
+                    "example": "1. Winning the Nobel Prize was her greatest achievement. (Ganhar o Prêmio Nobel foi sua maior conquista.) | 2. The moon landing marked a major human achievement. (O pouso na Lua marcou uma grande conquista humana.) | 3. The app tracks your fitness achievements. (O aplicativo rastreia suas conquistas fitness.)",
+                    "synonyms": "accomplishment, success",
+                    "antonyms": "failure, defeat"
+                },
+                "simplified": {
+                    "definition": "conquista",
+                    "example": "Winning was her greatest achievement. (Ganhar foi sua maior conquista.)"
+                },
+                "mastered": {
+                    "definition": "conquista",
+                    "example": ""
+                }
+            },
+            // ... [adicione todas as outras palavras seguindo o mesmo padrão]
+            "weight": {
+                "full": {
+                    "definition": "peso",
+                    "example": "1. He's trying to lose weight. (Ele está tentando perder peso.) | 2. The weight of responsibility. (O peso da responsabilidade.) | 3. The package's weight is 2kg. (O peso do pacote é 2kg.)",
+                    "synonyms": "heaviness, load",
+                    "antonyms": "lightness, weightlessness"
+                },
+                "simplified": {
+                    "definition": "peso",
+                    "example": "He's trying to lose weight. (Ele está tentando perder peso.)"
+                },
+                "mastered": {
+                    "definition": "peso",
+                    "example": ""
+                }
+            }
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const params = new URLSearchParams(window.location.search);
+            const word = params.get('palavra');
+            const level = params.get('level') || 'full';
+            const eventId = params.get('event_id');
+            
+            const linkReviewDailyFull = document.getElementById('link-review-daily-full');
+            const linkReview3DaysSimplified = document.getElementById('link-review-3days-simplified');
+            const linkMarkMastered = document.getElementById('link-mark-mastered');
+
+            const wordDetailsDiv = document.getElementById('word-details');
+            const linkRevisarDiario = document.getElementById('link-revisar-diario');
+            const linkRevisar3Dias = document.getElementById('link-revisar-3-dias');
+            const linkConcluido = document.getElementById('link-concluido');
+            
+
+            const googleAppsScriptBaseUrl = "https://script.google.com/macros/s/SEU_ID_DO_SCRIPT_AQUI/exec";
+
+            if (word && wordsData[word] && wordsData[word][level]) {
+                const data = wordsData[word][level];
+                const fullData = wordsData[word]['full'];
+
+                // Processamento dos exemplos
+                let examplesHTML = '';
+                if (data.example && data.example.trim() !== '') {
+                    if (level === 'full') {
+                        // Dividir os exemplos e criar um elemento para cada um
+                        const examples = data.example.split('|').map(ex => ex.trim());
+                        examplesHTML = examples.map(ex => 
+                            `<div class="example"><strong>Exemplo:</strong> <em>${ex}</em></div>`
+                        ).join('');
+                    } else {
+                        // Para outros níveis, mostrar apenas o primeiro exemplo
+                        const firstExample = data.example.split('|')[0].trim();
+                        examplesHTML = `<div class="example"><strong>Exemplo:</strong> <em>${firstExample}</em></div>`;
+                    }
+                }
+
+                wordDetailsDiv.innerHTML = `
+                    <h2 class="word">${word.charAt(0).toUpperCase() + word.slice(1)}</h2>
+                    <p class="definition"><strong>Definição:</strong> ${data.definition}</p>
+                    ${examplesHTML}
+                    ${data.synonyms && level === 'full' ? `<p class="synonyms"><strong>Sinônimos:</strong> ${data.synonyms}</p>` : ''}
+                    ${data.antonyms && level === 'full' ? `<p class="antonyms"><strong>Antônimos:</strong> ${data.antonyms}</p>` : ''}
+                `;
+
+                // Configurar links de ação
+                linkRevisarDiario.href = `${googleAppsScriptBaseUrl}?action=revisar_diariamente&palavra=${word}&current_level=${level}&event_id=${eventId || ''}`;
+                linkRevisar3Dias.href = `${googleAppsScriptBaseUrl}?action=revisar_em_3_dias&palavra=${word}&current_level=${level}&event_id=${eventId || ''}`;
+                linkConcluido.href = `${googleAppsScriptBaseUrl}?action=concluido_normal&palavra=${word}&current_level=${level}&event_id=${eventId || ''}`;
+                linkReviewDailyFull.href = `${googleAppsScriptBaseUrl}?action=update_daily_full&palavra=${word}`;
+                linkReview3DaysSimplified.href = `${googleAppsScriptBaseUrl}?action=update_3days_simplified&palavra=${word}`;
+                linkMarkMastered.href = `${googleAppsScriptBaseUrl}?action=update_mastered&palavra=${word}`;
+
+
+
+                
+            } else {
+                wordDetailsDiv.innerHTML = `<p class="error-message">Palavra "${word || 'não especificada'}" ou nível "${level}" não encontrado.</p>`;
+                document.querySelector('.actions').style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>

@@ -27,10 +27,9 @@
     </div>
 
     <div class="actions">
-        <a id="link-review-daily-full" href="https://script.google.com/macros/s/AKfycbx6TkmRlVBLLVPHlAecM48uu2ChZwvyqlUFjlQS4g-6pRj2TT4Dsjm2AOtwzvTrEOo/exec?action=update_daily_full&palavra=access&current_level=full&event_id=">Revisar Diariamente (Díficil/Full)</a>
-        <a id="link-review-3days-simplified" href="https://script.google.com/macros/s/AKfycbx6TkmRlVBLLVPHlAecM48uu2ChZwvyqlUFjlQS4g-6pRj2TT4Dsjm2AOtwzvTrEOo/exec?action=update_daily_full&palavra=access&current_level=full&event_id=">Revisar em 3 Dias (Médio/Simplified)</a>
-        <a id="link-mark-mastered" href="https://script.google.com/macros/s/AKfycbx6TkmRlVBLLVPHlAecM48uu2ChZwvyqlUFjlQS4g-6pRj2TT4Dsjm2AOtwzvTrEOo/exec?action=update_daily_full&palavra=access&current_level=full&event_id=">Dominada (Fácil/Mastered)</a>
-
+   linkReviewDailyFull.href = `${googleAppsScriptBaseUrl}?action=update_daily_full&palavra=${word}&current_level=${level}&event_id=${eventId || ''}`;
+linkReview3DaysSimplified.href = `${googleAppsScriptBaseUrl}?action=update_3days_simplified&palavra=${word}&current_level=${level}&event_id=${eventId || ''}`;
+linkMarkMastered.href = `${googleAppsScriptBaseUrl}?action=update_mastered&palavra=${word}&current_level=${level}&event_id=${eventId || ''}`;
     </div>
 
     <script>

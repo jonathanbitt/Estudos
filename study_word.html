@@ -27,14 +27,16 @@
     </div>
 
     <div class="actions">
-   linkReviewDailyFull.href = `${googleAppsScriptBaseUrl}?action=update_daily_full&palavra=${word}&current_level=${level}&event_id=${eventId || ''}`;
-linkReview3DaysSimplified.href = `${googleAppsScriptBaseUrl}?action=update_3days_simplified&palavra=${word}&current_level=${level}&event_id=${eventId || ''}`;
-linkMarkMastered.href = `${googleAppsScriptBaseUrl}?action=update_mastered&palavra=${word}&current_level=${level}&event_id=${eventId || ''}`;
+        <a href="#" id="link-review-daily-full">Revisar Diariamente (Completo)</a>
+        <a href="#" id="link-review-3days-simplified">Revisar em 3 Dias (Simplificado)</a>
+        <a href="#" id="link-mark-mastered">Marcar como Dominado</a>
     </div>
 
     <script>
-        
-                        
+        // ATENÇÃO: COLOQUE AQUI O SEU URL DO GOOGLE APPS SCRIPT
+        // Exemplo: "https://script.google.com/macros/s/AKfycbx_SEU_ID_DO_SCRIPT_AQUI/exec";
+        const googleAppsScriptBaseUrl = "https://script.google.com/macros/s/AKfycbx6TkmRlVBLLVPHlAecM48uu2ChZwvyqlUFjlQS4g-6pRj2TT4Dsjm2AOtwzvTrEOo/exec"; 
+
         const wordsData = {
             "Ability": {
                 "full": {
@@ -104,38 +106,31 @@ linkMarkMastered.href = `${googleAppsScriptBaseUrl}?action=update_mastered&palav
         };
 
         document.addEventListener('DOMContentLoaded', () => {
-            const params = new URLSearchParams(window.location.search);
-            const word = params.get('palavra');
-            const level = params.get('level') || 'full';
-            const eventId = params.get('event_id');
-            
+            const urlParams = new URLSearchParams(window.location.search);
+            const word = urlParams.get('palavra');
+            const level = urlParams.get('level') || 'full'; // Padrão 'full' se não especificado
+            const eventId = urlParams.get('event_id'); // Pega o event_id, se existir
+
+            const wordDetailsDiv = document.getElementById('word-details');
+            const actionsDiv = document.querySelector('.actions'); // Referência para a div de ações
+
+            // Pega os elementos dos botões pelos seus IDs
             const linkReviewDailyFull = document.getElementById('link-review-daily-full');
             const linkReview3DaysSimplified = document.getElementById('link-review-3days-simplified');
             const linkMarkMastered = document.getElementById('link-mark-mastered');
 
-            const wordDetailsDiv = document.getElementById('word-details');
-            const linkRevisarDiario = document.getElementById('link-revisar-diario');
-            const linkRevisar3Dias = document.getElementById('link-revisar-3-dias');
-            const linkConcluido = document.getElementById('link-concluido');
-            
-
-            const googleAppsScriptBaseUrl = "https://script.google.com/macros/s/AKfycbx6TkmRlVBLLVPHlAecM48uu2ChZwvyqlUFjlQS4g-6pRj2TT4Dsjm2AOtwzvTrEOo/exec";
-
             if (word && wordsData[word] && wordsData[word][level]) {
                 const data = wordsData[word][level];
-                const fullData = wordsData[word]['full'];
-
-                // Processamento dos exemplos
+                
+                // Processamento dos exemplos (mantido do seu código)
                 let examplesHTML = '';
                 if (data.example && data.example.trim() !== '') {
                     if (level === 'full') {
-                        // Dividir os exemplos e criar um elemento para cada um
                         const examples = data.example.split('|').map(ex => ex.trim());
                         examplesHTML = examples.map(ex => 
                             `<div class="example"><strong>Exemplo:</strong> <em>${ex}</em></div>`
                         ).join('');
                     } else {
-                        // Para outros níveis, mostrar apenas o primeiro exemplo
                         const firstExample = data.example.split('|')[0].trim();
                         examplesHTML = `<div class="example"><strong>Exemplo:</strong> <em>${firstExample}</em></div>`;
                     }
@@ -149,20 +144,18 @@ linkMarkMastered.href = `${googleAppsScriptBaseUrl}?action=update_mastered&palav
                     ${data.antonyms && level === 'full' ? `<p class="antonyms"><strong>Antônimos:</strong> ${data.antonyms}</p>` : ''}
                 `;
 
-                // Configurar links de ação
-                linkRevisarDiario.href = `${googleAppsScriptBaseUrl}?action=revisar_diariamente&palavra=${word}&current_level=${level}&event_id=${eventId || ''}`;
-                linkRevisar3Dias.href = `${googleAppsScriptBaseUrl}?action=revisar_em_3_dias&palavra=${word}&current_level=${level}&event_id=${eventId || ''}`;
-                linkConcluido.href = `${googleAppsScriptBaseUrl}?action=concluido_normal&palavra=${word}&current_level=${level}&event_id=${eventId || ''}`;
+                // Configurar links de ação (agora que os elementos HTML existem)
                 linkReviewDailyFull.href = `${googleAppsScriptBaseUrl}?action=update_daily_full&palavra=${word}&current_level=${level}&event_id=${eventId || ''}`;
                 linkReview3DaysSimplified.href = `${googleAppsScriptBaseUrl}?action=update_3days_simplified&palavra=${word}&current_level=${level}&event_id=${eventId || ''}`;
                 linkMarkMastered.href = `${googleAppsScriptBaseUrl}?action=update_mastered&palavra=${word}&current_level=${level}&event_id=${eventId || ''}`;
 
+                // Certifica-se de que a div de ações está visível
+                actionsDiv.style.display = 'block'; 
 
-
-                
             } else {
-                wordDetailsDiv.innerHTML = `<p class="error-message">Palavra "${word || 'não especificada'}" ou nível "${level}" não encontrado.</p>`;
-                document.querySelector('.actions').style.display = 'none';
+                wordDetailsDiv.innerHTML = `<p class="error-message">Palavra "${word || 'não especificada'}" ou nível "${level}" não encontrado nos dados.</p>`;
+                // Se a palavra não for encontrada, esconde a div de ações
+                actionsDiv.style.display = 'none'; 
             }
         });
     </script>
